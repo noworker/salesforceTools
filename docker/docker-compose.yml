@@ -1,0 +1,32 @@
+version: '3'
+services:
+  app:
+    container_name: golang-container
+    build:
+      context: ../
+      dockerfile: './docker/golang/Dockerfile'
+    ports:
+      - 8080:8080
+    volumes:
+      - '../src/:/app/'
+    tty: true
+    env_file:
+      - ./golang/.go_env
+    environment:
+      - TZ=Asia/Tokyo
+  postgres:
+    container_name: postgres-container
+    build:
+      context: .
+      dockerfile: './db/Dockerfile'
+    ports:
+      - 5444:5432
+    environment:
+      POSTGRES_DB: salesforceTools
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+    volumes:
+      - './db/postgres_volume:/var/lib/postgresql'
+      - './db/init:/docker-entrypoint-initdb.d'
+volumes:
+  postgres_volume:
