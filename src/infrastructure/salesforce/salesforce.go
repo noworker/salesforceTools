@@ -25,6 +25,7 @@ func NewSalesforceClient() ISalesforceClient {
 	return &SalesforceClient{}
 }
 
+// salesforceのアクセストークンを取得する関数
 func (cl *SalesforceClient) GetSalesforceTokenByUserAndPassword(
 	sat model.SalesforceAccessToken,
 	salesforceUrl string,
