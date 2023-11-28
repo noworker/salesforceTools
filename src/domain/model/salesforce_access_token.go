@@ -13,7 +13,7 @@ type SalesforceAccessToken struct {
 example.
 {
     "access_token": "00D5j00000DhxaS!AR0AQNzaJfMiNAikAgsWADX2EdoMJu780It1p55vjvZJJGT1hCmgEuEuv1m1apt7ymQD5YqLSlJ0EYXrtyrIt36jDRewrh8X",
-    "instance_url": "https://resourceful-impala-cbuulp-dev-ed.trailblaze.my.salesforce.com",
+    "instance_url": "htrailblaze.my.salesforce.com",
     "id": "https://login.salesforce.com/id/00D5j00000DhxaSEAR/0055j00000AZAQlAAP",
     "token_type": "Bearer",
     "issued_at": "1701160824576",
