@@ -10,13 +10,12 @@ import (
 )
 
 // 環境変数の読み取り テスト前処理
-func Setup() {
-	log.Println("Do stuff BEFORE the tests!")
-	err := godotenv.Load("../../../.env.dev")
+func LoadEnv(envPath string) {
+	fmt.Println("Load env")
+	err := godotenv.Load(envPath)
 	if err != nil {
 		log.Println(err)
 	}
-	log.Println("Do stuff AFTER the tests!")
 }
 
 // HTTPリクエストのダンプを出力

@@ -1,6 +1,6 @@
 package model
 
-type SalesforceAccessToken struct {
+type SalesforceAccessTokenModel struct {
 	AccessToken string `json:"access_token"`
 	InstanceUrl string `json:"instance_url"`
 	Id          string `json:"id"`
