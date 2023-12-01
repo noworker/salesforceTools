@@ -10,8 +10,8 @@ import (
 	"github.com/noworker/salesforceTools/db"
 	"github.com/noworker/salesforceTools/domain/usecase"
 	"github.com/noworker/salesforceTools/infrastructure/repositories"
-	"github.com/noworker/salesforceTools/infrastructure/router"
 	"github.com/noworker/salesforceTools/infrastructure/salesforce"
+	"github.com/noworker/salesforceTools/router"
 )
 
 func main() {

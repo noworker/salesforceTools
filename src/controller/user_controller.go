@@ -2,6 +2,8 @@ package controller
 
 import (
 	"net/http"
+	"os"
+	"time"
 
 	"github.com/labstack/echo/v4"
 	"github.com/noworker/salesforceTools/domain/model"
@@ -10,6 +12,8 @@ import (
 
 type IUserController interface {
 	SignUp(c echo.Context) error
+	Login(c echo.Context) error
+	Logout(c echo.Context) error
 }
 
 type UserController struct {
@@ -31,4 +35,49 @@ func (uc *UserController) SignUp(c echo.Context) error {
 		c.JSON(http.StatusInternalServerError, err.Error())
 	}
 	return c.JSON(http.StatusCreated, userRes)
+}
+
+func (uc *UserController) Login(c echo.Context) error {
+	userModel := &model.User{}
+	err := c.Bind(userModel)
+	if err != nil {
+		return c.JSON(http.StatusBadRequest, err.Error())
+	}
+	tokenString, err := uc.uu.Login(userModel)
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, err.Error())
+	}
+	cookie := &http.Cookie{}
+	cookie.Name = "token"
+	cookie.Value = tokenString
+	cookie.Expires = time.Now().Add(time.Hour * 24)
+	cookie.Path = "/"
+	cookie.HttpOnly = true
+	cookie.Domain = os.Getenv("API_DOMAIN")
+	if os.Getenv("MODE") == "DEV" {
+		cookie.SameSite = http.SameSiteLaxMode
+	} else {
+		cookie.SameSite = http.SameSiteNoneMode
+		cookie.Secure = true
+	}
+	c.SetCookie(cookie)
+	return c.NoContent(http.StatusOK)
+}
+
+func (uc *UserController) Logout(c echo.Context) error {
+	cookie := &http.Cookie{}
+	cookie.Name = "token"
+	cookie.Value = ""
+	cookie.Expires = time.Now()
+	cookie.Path = "/"
+	cookie.HttpOnly = true
+	cookie.Domain = os.Getenv("API_DOMAIN")
+	if os.Getenv("MODE") == "DEV" {
+		cookie.SameSite = http.SameSiteLaxMode
+	} else {
+		cookie.SameSite = http.SameSiteNoneMode
+		cookie.Secure = true
+	}
+	c.SetCookie(cookie)
+	return c.NoContent(http.StatusOK)
 }

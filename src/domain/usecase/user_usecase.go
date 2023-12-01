@@ -1,8 +1,11 @@
 package usecase
 
 import (
+	"os"
 	"strings"
+	"time"
 
+	"github.com/golang-jwt/jwt"
 	"github.com/google/uuid"
 	"github.com/noworker/salesforceTools/domain/model"
 	"github.com/noworker/salesforceTools/infrastructure/repositories"
@@ -11,6 +14,7 @@ import (
 
 type IUserUsecase interface {
 	SignUp(userModel *model.User) (model.UserSignUpResponse, error)
+	Login(userModel *model.User) (string, error)
 }
 
 type UserUsecase struct {
@@ -43,4 +47,25 @@ func (uu *UserUsecase) SignUp(userModel *model.User) (model.UserSignUpResponse, 
 		Name: userModel.Name,
 	}
 	return retUser, nil
+}
+
+func (uc *UserUsecase) Login(userModel *model.User) (string, error) {
+	storedUser := &model.User{}
+	err := uc.ur.GetUserByNameId(storedUser, userModel.Name)
+	if err != nil {
+		return "", err
+	}
+	err = bcrypt.CompareHashAndPassword([]byte(storedUser.Password), []byte(userModel.Password))
+	if err != nil {
+		return "", err
+	}
+	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
+		"user_id": storedUser.Id,
+		"exp":     time.Now().Add(time.Hour * 12).Unix(),
+	})
+	tokenString, err := token.SignedString([]byte(os.Getenv("SECRET")))
+	if err != nil {
+		return "", err
+	}
+	return tokenString, nil
 }
