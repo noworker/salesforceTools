@@ -1,7 +1,7 @@
 package usecase
 
 import (
-	"github.com/noworker/salesforceTools/infrastructure/salesforce"
+	salesforce "github.com/noworker/salesforceTools/infrastructure/salesforceService"
 )
 
 type ISalesforceUsecase interface {

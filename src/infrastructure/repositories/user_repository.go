@@ -8,6 +8,7 @@ import (
 type IUserRepository interface {
 	GetUserByNameId(user *model.User, userId string) error
 	CreateUser(user *model.User) error
+	UpdateUser(user *model.User) error
 }
 
 type UserRepository struct {
@@ -28,6 +29,17 @@ func (ur *UserRepository) GetUserByNameId(user *model.User, userId string) error
 
 func (ur *UserRepository) CreateUser(model *model.User) error {
 	if err := ur.db.Create(model).Error; err != nil {
+		return err
+	}
+	return nil
+}
+
+func (ur *UserRepository) UpdateUser(model *model.User) error {
+	if err := ur.db.Where("id=?", model.Id).Updates(model).Error; err != nil {
+		return err
+	}
+	err := ur.db.Where("id=?", model.Id).First(&model).Error
+	if err != nil {
 		return err
 	}
 	return nil

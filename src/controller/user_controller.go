@@ -14,6 +14,7 @@ type IUserController interface {
 	SignUp(c echo.Context) error
 	Login(c echo.Context) error
 	Logout(c echo.Context) error
+	UpdateUserSalesforceInfo(c echo.Context) error
 }
 
 type UserController struct {
@@ -80,4 +81,17 @@ func (uc *UserController) Logout(c echo.Context) error {
 	}
 	c.SetCookie(cookie)
 	return c.NoContent(http.StatusOK)
+}
+
+func (uc *UserController) UpdateUserSalesforceInfo(c echo.Context) error {
+	receivedUser := &model.User{}
+	err := c.Bind(receivedUser)
+	if err != nil {
+		return c.JSON(http.StatusBadRequest, err.Error())
+	}
+	updatedUser, err := uc.uu.UpdateUserSalesforceInfo(receivedUser)
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, err.Error())
+	}
+	return c.JSON(http.StatusOK, updatedUser)
 }

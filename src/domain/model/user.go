@@ -20,7 +20,7 @@ type User struct {
 	DeletedAt                        time.Time `json:"deletedAt"`
 }
 
-type UserSignUpResponse struct {
+type UserResponse struct {
 	Id   string `json:"id"`
 	Name string `json:"name"`
 }

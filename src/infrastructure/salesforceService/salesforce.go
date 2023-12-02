@@ -77,6 +77,9 @@ func (cl *SalesforceClient) GetSalesforceTokenByUserAndPassword(
 	return model, nil
 }
 
+/*
+# salesforceのSオブジェクトの一覧とメタ情報を取得する関数
+*/
 func (cl *SalesforceClient) GetSalesforceDescribeGlobal(model model.SalesforceDescribeGlobalModel, salesforceMyDomain string, salesforceAccessToken string) (model.SalesforceDescribeGlobalModel, error) {
 	client := &http.Client{}
 	header := http.Header{}

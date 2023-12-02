@@ -31,5 +31,6 @@ func NewRouter(uc controller.IUserController, sc controller.ISalesforceControlle
 		TokenLookup: "cookie:token",
 	}))
 	api.GET("/debuglogs", sc.GetDebugLogs)
+	api.PATCH("/update-user-salesforce-info", uc.UpdateUserSalesforceInfo)
 	return e
 }

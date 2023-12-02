@@ -10,7 +10,7 @@ import (
 	"github.com/noworker/salesforceTools/db"
 	"github.com/noworker/salesforceTools/domain/usecase"
 	"github.com/noworker/salesforceTools/infrastructure/repositories"
-	"github.com/noworker/salesforceTools/infrastructure/salesforce"
+	salesforce "github.com/noworker/salesforceTools/infrastructure/salesforceService"
 	"github.com/noworker/salesforceTools/router"
 )
 

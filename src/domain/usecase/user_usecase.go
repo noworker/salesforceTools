@@ -13,8 +13,9 @@ import (
 )
 
 type IUserUsecase interface {
-	SignUp(userModel *model.User) (model.UserSignUpResponse, error)
+	SignUp(userModel *model.User) (model.UserResponse, error)
 	Login(userModel *model.User) (string, error)
+	UpdateUserSalesforceInfo(userModel *model.User) (*model.UserResponse, error)
 }
 
 type UserUsecase struct {
@@ -25,8 +26,8 @@ func NewUserUsecase(userRepo repositories.IUserRepository) IUserUsecase {
 	return &UserUsecase{userRepo}
 }
 
-func (uu *UserUsecase) SignUp(userModel *model.User) (model.UserSignUpResponse, error) {
-	retUser := model.UserSignUpResponse{}
+func (uu *UserUsecase) SignUp(userModel *model.User) (model.UserResponse, error) {
+	retUser := model.UserResponse{}
 	hash, err := bcrypt.GenerateFromPassword([]byte(userModel.Password), 10)
 	if err != nil {
 		return retUser, err
@@ -42,7 +43,7 @@ func (uu *UserUsecase) SignUp(userModel *model.User) (model.UserSignUpResponse, 
 	if err != nil {
 		return retUser, err
 	}
-	retUser = model.UserSignUpResponse{
+	retUser = model.UserResponse{
 		Id:   userModel.Id,
 		Name: userModel.Name,
 	}
@@ -68,4 +69,27 @@ func (uc *UserUsecase) Login(userModel *model.User) (string, error) {
 		return "", err
 	}
 	return tokenString, nil
+}
+
+func (uc *UserUsecase) UpdateUserSalesforceInfo(userModel *model.User) (*model.UserResponse, error) {
+	// 必要なフィールドのみを抽出
+	updatedUser := &model.User{
+		Id:                     userModel.Id,
+		SalesforceMyDomain:     userModel.SalesforceMyDomain,
+		SalesforceLoginDomain:  userModel.SalesforceLoginDomain,
+		SalesforceClientId:     userModel.SalesforceClientId,
+		SalesforceClientSecret: userModel.SalesforceClientSecret,
+		SalesforceUserName:     userModel.SalesforceUserName,
+		SalesforcePassword:     userModel.SalesforcePassword,
+	}
+	err := uc.ur.UpdateUser(updatedUser)
+	if err != nil {
+		return &model.UserResponse{}, err
+	}
+	// ユーザのsalesforce情報をアップデートする
+	userResponse := &model.UserResponse{
+		Id:   updatedUser.Id,
+		Name: updatedUser.Name,
+	}
+	return userResponse, nil
 }

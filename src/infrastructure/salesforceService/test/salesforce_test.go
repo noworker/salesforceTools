@@ -5,7 +5,7 @@ import (
 	"testing"
 
 	"github.com/noworker/salesforceTools/domain/model"
-	"github.com/noworker/salesforceTools/infrastructure/salesforce"
+	salesforce "github.com/noworker/salesforceTools/infrastructure/salesforceService"
 	"github.com/noworker/salesforceTools/test"
 )
 
