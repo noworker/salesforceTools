@@ -10,7 +10,7 @@ import (
 )
 
 func TestGetSalesforceTokenByUserAndPassword(t *testing.T) {
-	test.LoadEnv("../../../.evn.dev")
+	test.LoadEnv("../../../.env.dev")
 	salesforceClient := salesforce.NewSalesforceClient()
 	sat := model.SalesforceAccessTokenModel{}
 	salesforceAccessTokenResponse, err := salesforceClient.GetSalesforceTokenByUserAndPassword(
